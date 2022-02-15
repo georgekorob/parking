@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'authapp',
-    'camsapp'
+    'camsapp',
+    'srvapp'
 ]
 
 MIDDLEWARE = [

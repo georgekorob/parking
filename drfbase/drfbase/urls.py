@@ -19,9 +19,11 @@ from rest_framework.routers import DefaultRouter
 from camsapp.views import CameraModelAPIView
 from django.conf import settings
 from django.conf.urls.static import static
+from srvapp.views import AIServerModelViewSet
 
 router = DefaultRouter()
 router.register('cameras', CameraModelAPIView)
+router.register('aiservers', AIServerModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

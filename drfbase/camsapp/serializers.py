@@ -1,15 +1,16 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer
 from camsapp.models import Camera
+from srvapp.serializers import AIServerModelSerializer
 
 
-class CameraModelSerializer(ModelSerializer):
+class CameraModelSerializer(HyperlinkedModelSerializer):
+    url_ai = AIServerModelSerializer(source="ai_server")
+
     class Meta:
         model = Camera
-        fields = ('id',
-                  'cam_server_id',
-                  'ip_addr',
-                  'port',
-                  'slug_after',
-                  'username',
-                  'password',
-                  'picture')
+        exclude = ('users',)
+        # fields = ('id',
+        #           'cam_server',
+        #           'ai_server',
+        #           'url',
+        #           'picture')

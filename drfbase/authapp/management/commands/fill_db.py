@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from django.utils import lorem_ipsum
 from authapp.models import User
 from camsapp.models import Camera
+from srvapp.models import CAMServer, AIServer, ANServer
 
 
 def load_from_json(file_name):
@@ -33,19 +34,30 @@ class Command(BaseCommand):
         call_command('makemigrations')
         print('migrate...')
         call_command('migrate')
-        print('User.objects.all().delete()...')
-        User.objects.all().delete()
+        # print('User.objects.all().delete()...')
+        # print('Camera.objects.all().delete()...')
+        # User.objects.all().delete()
+        # CAMServer.objects.all().delete()
+        # AIServer.objects.all().delete()
+        # ANServer.objects.all().delete()
+        # Camera.objects.all().delete()
         User.objects.create_superuser(username=os.getenv('SUPER_USER_USERNAME'),
                                       password=os.getenv('SUPER_USER_PASSWORD'),
                                       email=os.getenv('SUPER_USER_EMAIL'))
         User.objects.create_user(username='geekbrains',
                                  password='passfortest',
                                  email='georgekorob@gmail.com')
-        print('Camera.objects.all().delete()...')
-        Camera.objects.all().delete()
-        camera = Camera.objects.create(ip_addr=os.getenv('CAM_IP'),
-                                       username=os.getenv('CAM_USER'),
-                                       password=os.getenv('CAM_PASSWD'))
+        camserver = CAMServer.objects.create(name='camserver')
+        aiserver = AIServer.objects.create(name='aiserver',
+                                           ip_address=os.getenv('AI_IP'),
+                                           port=os.getenv('AI_PORT'))
+        anserver = ANServer.objects.create(name='anserver')
+        # camera = Camera.objects.create(ip_addr=os.getenv('CAM_IP'),
+        #                                username=os.getenv('CAM_USER'),
+        #                                password=os.getenv('CAM_PASSWD'))
+        camera = Camera.objects.create(cam_server=camserver,
+                                       ai_server=aiserver,
+                                       url=os.getenv('CAM_URL'))
         camera.users.set(User.objects.all())
         print('DONE!!!')
 

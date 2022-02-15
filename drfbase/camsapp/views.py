@@ -14,7 +14,7 @@ class CameraModelAPIView(mixins.RetrieveModelMixin,
                          GenericViewSet):
     queryset = Camera.objects.all()
     serializer_class = CameraModelSerializer
-    filterset_fields = ['cam_server_id']
+    filterset_fields = ['cam_server']
 
 
 class IndexTemplateView(TemplateView):

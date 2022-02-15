@@ -1,33 +1,27 @@
 import datetime, time, requests, cv2, os
 from pathlib import Path
+from settings import BASE_IP, BASE_PORT, AI_IP, AI_PORT
 
 cam_server_id = 1
-base_addr_ip = '127.0.0.1'
-base_addr_port = '8000'
-base_api = f'http://{base_addr_ip}:{base_addr_port}/api/cameras/'
+base_api = f'http://{BASE_IP}:{BASE_PORT}/api/cameras/'
 
 
 class Camera:
     def __init__(self, shotspath, cam):
         self.id = cam.get('id')
-        self.ip = cam.get('ip_addr')
-        self.port = cam.get('port')
-        self.slug_after = cam.get('slug_after')
-        self.user = cam.get('username')
-        self.password = cam.get('password')
+        self.url = cam.get('url')
         self.path_to_save = shotspath / f'{self.id:03}'
         if not os.path.exists(self.path_to_save):
             os.mkdir(self.path_to_save)
-        self.url = f'rtsp://{self.user}:{self.password}@{self.ip}:{self.port}/{self.slug_after}'
         self.cap = cv2.VideoCapture()
         self.cap.open(self.url)
         self.ms_now = time.time()
-
-
-def send_picture(cam, frame, namefile, server):
-    return requests.patch(f'{server}{cam.id}/',
-                          files={'picture': open(namefile, 'rb')},
-                          data={'file_name': namefile.name})
+        # self.ip = cam.get('ip_addr')
+        # self.port = cam.get('port')
+        # self.slug_after = cam.get('slug_after')
+        # self.user = cam.get('username')
+        # self.password = cam.get('password')
+        # self.url = f'rtsp://{self.user}:{self.password}@{self.ip}:{self.port}/{self.slug_after}'
 
 
 shotspath = Path(__file__).resolve().parent.parent / 'camerashots'
@@ -54,7 +48,11 @@ try:
                 cam.ms_now = time.time()
                 namefile = cam.path_to_save / f'{cam.id:05}.jpg'
                 cv2.imwrite(namefile.as_posix(), frame)
-                send_picture(cam, frame, namefile, base_api)
+                file = open(namefile, 'rb')
+                name = namefile.name
+                requests.patch(url=f'{base_api}{cam.id}/', files={'picture': file}, data={'file_name': name})
+                url = f'http://{BASE_IP}:{AI_PORT}/'
+                requests.put(url=url, files={'picture': file}, data={'file_name': name})
                 # cv2.imshow('frame', frame)
 except Exception as e:
     print(e)
