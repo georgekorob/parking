@@ -1,0 +1,11 @@
+{% extends 'camsapp/index.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="image_block_view">
+        {% include 'camsapp/image.html' %}
+    </div>
+{% endblock content %}
+{% block js %}
+    <script src="{% static 'js/camera.js' %}"></script>
+{% endblock js %}

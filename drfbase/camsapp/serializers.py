@@ -5,4 +5,11 @@ from camsapp.models import Camera
 class CameraModelSerializer(ModelSerializer):
     class Meta:
         model = Camera
-        fields = '__all__'
+        fields = ('id',
+                  'cam_server_id',
+                  'ip_addr',
+                  'port',
+                  'slug_after',
+                  'username',
+                  'password',
+                  'picture')

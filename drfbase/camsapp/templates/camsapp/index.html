@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Picture</title>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <ul>
+            <li>
+                <a href="/api/cameras/">API</a>
+            </li>
+            <li>
+                <a href="{% url 'camsapp:index' %}">Главная</a>
+            </li>
+        </ul>
+    </header>
+    <div>
+        {% block content %}
+            <a href="{% url 'camsapp:camera' 1 %}">Камерa 1</a>
+        {% endblock content %}
+    </div>
+    <footer>
+
+    </footer>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% block js %}
+    <script src="{% static 'js/index.js' %}"></script>
+{% endblock js %}
+</html>

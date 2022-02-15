@@ -13,22 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from camsapp.views import CameraModelAPIView
-from django.conf import settings
-from django.conf.urls.static import static
 
-router = DefaultRouter()
-router.register('cameras', CameraModelAPIView)
+from camsapp.views import IndexTemplateView, IndexDetailView, PictureUpdate
 
+app_name = 'camsapp'
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls)),
-    path('', include('camsapp.urls', namespace='camsapp')),
+    path('', IndexTemplateView.as_view(), name='index'),
+    path('cams/<int:pk>/', IndexDetailView.as_view(), name='camera'),
+    path('camspic/<int:pk>/', PictureUpdate.as_view(), name='picture'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

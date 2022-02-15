@@ -21,15 +21,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if os.path.exists('db.sqlite3'):
             os.remove('db.sqlite3')
+        print('deleted db.sqlite3')
         for dirapp in os.listdir():
             if os.path.isdir(dirapp) and os.path.exists(f'{dirapp}/migrations'):
                 for filemig in os.listdir(f'{dirapp}/migrations'):
                     if filemig not in ['__init__.py', '__pycache__']:
                         filename = f'{dirapp}/migrations/{filemig}'
-                        print(filename)
                         os.remove(filename)
+                        print(f'deleted {filename}')
+        print('makemigrations...')
         call_command('makemigrations')
+        print('migrate...')
         call_command('migrate')
+        print('User.objects.all().delete()...')
         User.objects.all().delete()
         User.objects.create_superuser(username=os.getenv('SUPER_USER_USERNAME'),
                                       password=os.getenv('SUPER_USER_PASSWORD'),
@@ -37,11 +41,13 @@ class Command(BaseCommand):
         User.objects.create_user(username='geekbrains',
                                  password='passfortest',
                                  email='georgekorob@gmail.com')
+        print('Camera.objects.all().delete()...')
         Camera.objects.all().delete()
         camera = Camera.objects.create(ip_addr=os.getenv('CAM_IP'),
                                        username=os.getenv('CAM_USER'),
                                        password=os.getenv('CAM_PASSWD'))
         camera.users.set(User.objects.all())
+        print('DONE!!!')
 
 # User.objects.all().delete()
 # for name in ['authapp']:
