@@ -24,6 +24,7 @@ from srvapp.views import AIServerModelViewSet
 router = DefaultRouter()
 router.register('cameras', CameraModelAPIView)
 router.register('aiservers', AIServerModelViewSet)
+# router.register('anservers', ANServerModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
