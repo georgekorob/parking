@@ -1,10 +1,22 @@
 import datetime, time, requests, cv2, os
+import io
 from pathlib import Path
 from settings import BASE_IP, BASE_PORT, AI_IP, AI_PORT
 
 cam_server_id = 1
 base_api = f'http://{BASE_IP}:{BASE_PORT}/api/cameras/'
 
+import numpy as np
+import urllib.request
+
+# url = 'http://www.pyimagesearch.com/wp-content/uploads/2015/01/google_logo.png'
+# resp = urllib.request.urlopen(url)
+# image = resp.read()
+# image = np.asarray(bytearray(image), dtype="uint8")
+# image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+# data_encode = np.array(image)
+# cv2.imshow('URL2Image', image)
+# cv2.waitKey()
 
 class Camera:
     def __init__(self, shotspath, cam):
@@ -42,11 +54,13 @@ try:
                 break
             if time.time() - cam.ms_now > 2:
                 cam.ms_now = time.time()
-                namefile = cam.path_to_save / f'{cam.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpg'
-                cv2.imwrite(namefile.as_posix(), frame)
-                file = open(namefile, 'rb')
-                name = namefile.name
-                requests.patch(url=f'{base_api}{cam.id}/', files={'picture': file}, data={'file_name': name})
+                namefile = f'{cam.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpg'
+                namepathfile = cam.path_to_save / namefile
+                cv2.imwrite(namepathfile.as_posix(), frame)
+                file = open(namepathfile, 'rb')
+                jpeg_frame = cv2.imencode('.jpg', frame)[1].tobytes()
+                jpeg_frame = io.BytesIO(jpeg_frame)
+                requests.patch(url=f'{base_api}{cam.id}/', files={'picture': file}, data={'file_name': namefile})
                 url = f'http://{BASE_IP}:{AI_PORT}/'
                 # requests.put(url=url, files={'picture': file}, data={'file_name': name})
                 # cv2.imshow('frame', frame)

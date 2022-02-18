@@ -16,6 +16,10 @@ class CameraModelAPIView(mixins.RetrieveModelMixin,
     serializer_class = CameraModelSerializer
     filterset_fields = ['camserver']
 
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
 
 class IndexTemplateView(TemplateView):
     template_name = 'camsapp/index.html'
