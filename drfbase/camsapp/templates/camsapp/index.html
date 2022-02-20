@@ -15,6 +15,15 @@
             <li>
                 <a href="{% url 'camsapp:index' %}">Главная</a>
             </li>
+            <li>
+                <a href="{% url 'srvapp:caminit' 1 %}">Инициализация камеры</a>
+            </li>
+            <li>
+                <a href="{% url 'srvapp:camshoot' 1 %}">Сделать снимок с камеры</a>
+            </li>
+            <li>
+                <a href="{% url 'srvapp:camdestroy' 1 %}">Остановка сервера камер</a>
+            </li>
         </ul>
     </header>
     <div>

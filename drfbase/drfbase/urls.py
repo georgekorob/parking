@@ -31,6 +31,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path('', include('camsapp.urls', namespace='camsapp')),
+    path('srvapp/', include('srvapp.urls', namespace='srvapp')),
 ]
 
 if settings.DEBUG:

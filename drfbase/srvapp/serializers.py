@@ -1,11 +1,17 @@
 from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
-from srvapp.models import AIServer
+from srvapp.models import AIServer, CAMServer
 
 
 class AIServerModelSerializer(ModelSerializer):
     class Meta:
         model = AIServer
+        fields = '__all__'
+
+
+class CAMServerModelSerializer(ModelSerializer):
+    class Meta:
+        model = CAMServer
         fields = '__all__'
 
 

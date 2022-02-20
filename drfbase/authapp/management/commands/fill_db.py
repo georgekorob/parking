@@ -47,11 +47,15 @@ class Command(BaseCommand):
         User.objects.create_user(username='geekbrains',
                                  password='passfortest',
                                  email='georgekorob@gmail.com')
-        camserver = CAMServer.objects.create(servername='camserver')
+        camserver = CAMServer.objects.create(servername='camserver',
+                                             ip=os.getenv('CAM_IP'),
+                                             port=os.getenv('CAM_PORT'))
         aiserver = AIServer.objects.create(servername='aiserver',
                                            ip=os.getenv('AI_IP'),
                                            port=os.getenv('AI_PORT'))
-        anserver = ANServer.objects.create(servername='anserver')
+        anserver = ANServer.objects.create(servername='anserver',
+                                           ip=os.getenv('AN_IP'),
+                                           port=os.getenv('AN_PORT'))
         # camera = Camera.objects.create(ip_addr=os.getenv('CAM_IP'),
         #                                username=os.getenv('CAM_USER'),
         #                                password=os.getenv('CAM_PASSWD'))
