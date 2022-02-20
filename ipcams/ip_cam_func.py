@@ -30,10 +30,18 @@ class CameraControl:
             _, frame = camera.cap.read()
             namefile = f'{camera.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpeg'
             io_buf_file = self.buffer_file_from_frame(frame, namefile)
-            requests.patch(url=f'http://127.0.0.1:8000/api/cameras/1/',
-                           files={'picture': io_buf_file},
-                           data={'file_name': namefile})
-            # requests.put(url=cam.aiserverlink, files={'picture': io_buf_file}, data={'file_name': namefile})
+            try:
+                requests.patch(url=f'http://127.0.0.1:8000/api/cameras/1/',
+                               files={'picture': io_buf_file},
+                               data={'file_name': namefile})
+            except Exception as e:
+                print('Send to drfbase:', e)
+            try:
+                requests.put(url=camera.aiserverlink,
+                             files={'picture': io_buf_file},
+                             data={'file_name': namefile})
+            except Exception as e:
+                print('Send to ai:', e)
 
     def destroy(self):
         for camera in self.cameras:
