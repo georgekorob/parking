@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
-from srvapp.models import AIServer, CAMServer
+from srvapp.models import AIServer, CAMServer, ANServer
 
 
 class AIServerModelSerializer(ModelSerializer):
@@ -18,4 +18,10 @@ class CAMServerModelSerializer(ModelSerializer):
 class AIServerForCameraModelSerializer(ModelSerializer):
     class Meta:
         model = AIServer
+        exclude = ('id',)
+
+
+class ANServerForCameraModelSerializer(ModelSerializer):
+    class Meta:
+        model = ANServer
         exclude = ('id',)

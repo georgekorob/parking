@@ -1,6 +1,4 @@
-import requests
-import socket
-
+import requests, socket
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -11,7 +9,8 @@ from camsapp.models import Camera
 from camsapp.serializers import CameraModelSerializer
 from camsapp.views import CameraModelAPIView
 from srvapp.models import AIServer, CAMServer
-from srvapp.serializers import AIServerModelSerializer, CAMServerModelSerializer, AIServerForCameraModelSerializer
+from srvapp.serializers import AIServerModelSerializer, CAMServerModelSerializer, AIServerForCameraModelSerializer, \
+    ANServerForCameraModelSerializer
 
 
 # Create your views here.
@@ -38,8 +37,8 @@ def init_cam_server(request, pk):
     data_cams = []
     for camera in cameras:
         data = CameraModelSerializer(camera).data
-        aiserverinfo = AIServerForCameraModelSerializer(data['aiserverinfo']).data
-        data['aiserverinfo'] = aiserverinfo
+        data['aiserverinfo'] = AIServerForCameraModelSerializer(data['aiserverinfo']).data
+        data['anserverinfo'] = ANServerForCameraModelSerializer(data['anserverinfo']).data
         data_cams.append(data)
     return post_request_to_cam(request, cam_server.ip, cam_server.port, 'init', data_cams)
 

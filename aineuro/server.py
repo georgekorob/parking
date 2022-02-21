@@ -1,11 +1,11 @@
 import socket
-from ip_cam_func import IPCameraControl
-from ipcams.settings import IPCAM_IP, IPCAM_PORT
+from ai_neuro_func import AINeuroControl
+from aineuro.settings import AI_IP, AI_PORT
 
-camera_control = []
+neuro_control = AINeuroControl()
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((IPCAM_IP, IPCAM_PORT))
+server.bind((AI_IP, AI_PORT))
 server.listen(2)
 print("Working...")
 
@@ -23,16 +23,17 @@ while True:
 
     # получаем команду
     raw_data = client_socket.recv(1024).decode('utf-8')
-    command = raw_data.split('\r\n')[0].split()[1].strip('/')
+    raw_data = raw_data.split('\r\n')
+    command = raw_data[0].split()[1].strip('/')
     print(command)
     if command == 'init':
-        camera_control = IPCameraControl(raw_data.split('\r\n')[8])
-    elif command == 'shoot':
-        camera_control.shoot(raw_data.split('\r\n')[8])
+        neuro_control.init(raw_data[8])
+    elif command == 'calc':
+        neuro_control.calc(client_socket, raw_data)
     elif command == 'destroy':
-        camera_control.destroy()
+        neuro_control.destroy()
         break
-    if command in ['init', 'shoot', 'destroy']:
+    if command in ['init', 'calc', 'destroy']:
         client_socket.send(set_headers())
     client_socket.close()
 

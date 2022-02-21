@@ -1,11 +1,11 @@
 import socket
-from ip_cam_func import IPCameraControl
-from ipcams.settings import IPCAM_IP, IPCAM_PORT
+from analize_func import AnalizeControl
+from analize.settings import AN_IP, AN_PORT
 
-camera_control = []
+analize_control = AnalizeControl()
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((IPCAM_IP, IPCAM_PORT))
+server.bind((AN_IP, AN_PORT))
 server.listen(2)
 print("Working...")
 
@@ -26,13 +26,13 @@ while True:
     command = raw_data.split('\r\n')[0].split()[1].strip('/')
     print(command)
     if command == 'init':
-        camera_control = IPCameraControl(raw_data.split('\r\n')[8])
-    elif command == 'shoot':
-        camera_control.shoot(raw_data.split('\r\n')[8])
+        analize_control.init(raw_data.split('\r\n')[8])
+    elif command == 'calc':
+        analize_control.calc(raw_data.split('\r\n')[8])
     elif command == 'destroy':
-        camera_control.destroy()
+        analize_control.destroy()
         break
-    if command in ['init', 'shoot', 'destroy']:
+    if command in ['init', 'calc', 'destroy']:
         client_socket.send(set_headers())
     client_socket.close()
 

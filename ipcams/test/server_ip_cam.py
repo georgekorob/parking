@@ -1,5 +1,5 @@
-import datetime, time, requests, cv2, os, io
-from settings import BASE_IP, BASE_PORT
+import datetime, time, requests, cv2, io
+from ipcams.settings import BASE_IP, BASE_PORT
 
 cam_server_id = 1
 base_api = f'http://{BASE_IP}:{BASE_PORT}/api/cameras/'

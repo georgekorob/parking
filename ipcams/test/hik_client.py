@@ -1,6 +1,6 @@
 from hikvisionapi import Client
 import cv2
-from settings import CAM_USER, CAM_PASSWD, CAM_IP
+from ipcams.settings import CAM_USER, CAM_PASSWD, CAM_IP
 
 try:
     cam = Client(f'http://{CAM_IP}', CAM_USER, CAM_PASSWD, timeout=30)
