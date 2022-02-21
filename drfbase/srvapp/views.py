@@ -43,11 +43,10 @@ def init_cam_server(request, pk):
     return post_request_to_cam(request, cam_server.ip, cam_server.port, 'init', data_cams)
 
 
-def shoot_cam_server(request, pk):
+def action_cam_server(request, pk):
     camera = get_object_or_404(Camera, pk=pk)
     cam_server = camera.camserver
-    # cam_server = get_object_or_404(CAMServer, pk=pk)
-    return post_request_to_cam(request, cam_server.ip, cam_server.port, 'shoot', [camera.id])
+    return post_request_to_cam(request, cam_server.ip, cam_server.port, 'action', [camera.id])
 
 
 def destroy_cam_server(request, pk):

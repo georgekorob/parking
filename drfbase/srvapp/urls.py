@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
-from srvapp.views import init_cam_server, shoot_cam_server, destroy_cam_server
+from srvapp.views import init_cam_server, action_cam_server, destroy_cam_server
 
 app_name = 'srvapp'
 urlpatterns = [
     path('cam/init/<int:pk>/', init_cam_server, name='caminit'),
-    path('cam/shoot/<int:pk>/', shoot_cam_server, name='camshoot'),
+    path('cam/action/<int:pk>/', action_cam_server, name='camaction'),
     path('cam/destroy/<int:pk>/', destroy_cam_server, name='camdestroy'),
 ]
