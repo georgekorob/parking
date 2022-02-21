@@ -19,3 +19,8 @@ class Camera(models.Model):
     class Meta:
         verbose_name = 'камера'
         verbose_name_plural = 'камеры'
+
+
+class CameraInfo(models.Model):
+    camera = models.ForeignKey(Camera, related_name='info', on_delete=models.CASCADE)
+    camerainfo = models.TextField(default='')

@@ -32,11 +32,12 @@ class ServerIPCam:
                 self.control = Control(data)
             elif command == 'action':
                 self.control.action(data, raw_data, client_socket)
-            elif command == 'destroy':
-                self.control.destroy()
-                break
             if command in ['init', 'action', 'destroy']:
                 client_socket.send(self.set_headers())
+            if command == 'destroy':
+                self.control.destroy()
+                client_socket.close()
+                break
             client_socket.close()
         print('Shutdown!')
         server.close()
@@ -79,6 +80,16 @@ class ControlClass(ABC):
         try:
             response = requests.patch(url=url, files=files, data=data)
             print(response.status_code, response.content)
+        except Exception as e:
+            print(errfstr.format(*args), end='')
+            print(e)
+
+    @staticmethod
+    def request_get_from_base(url, errfstr='', *args):
+        try:
+            response = requests.get(url=url)
+            print(response.status_code, response.content)
+            return response
         except Exception as e:
             print(errfstr.format(*args), end='')
             print(e)

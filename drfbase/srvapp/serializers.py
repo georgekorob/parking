@@ -9,6 +9,12 @@ class AIServerModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class ANServerModelSerializer(ModelSerializer):
+    class Meta:
+        model = ANServer
+        fields = '__all__'
+
+
 class CAMServerModelSerializer(ModelSerializer):
     class Meta:
         model = CAMServer

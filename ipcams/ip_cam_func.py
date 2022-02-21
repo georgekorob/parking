@@ -65,7 +65,8 @@ class IPCameraControl(ControlClass):
                                 {'file_name': namefile, 'camera_id': self.camera.id},
                                 io_buf_file)
             print('Результат action:', io_buf_file.__sizeof__())
-        print('Error action! Id not equal!')
+        else:
+            print('Error action! Id not equal!')
 
     def destroy(self):
         self.camera.cap.release()

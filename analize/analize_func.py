@@ -5,11 +5,12 @@ from ServerP import ControlClass
 class AnalizeControl(ControlClass):
     def __init__(self, camera):
         self.camera = json.loads(camera)
-
-        # TODO:
-        # GET запрос на сервер за информацией о камере, парковочных зонах и перспективе
-
-        print('Результат init:', self.camera)
+        response = self.request_get_from_base(
+            f'{self.camera["baseserverlink"]}caminfo/{self.camera["camera_id"]}/',
+            'Error get caminfo!'
+        )
+        self.camerainfo = json.loads(json.loads(response.content)['camerainfo'])
+        print('Результат init:', self.camerainfo)
 
     def action(self, data, *args):
         data = json.loads(data)
@@ -19,7 +20,7 @@ class AnalizeControl(ControlClass):
         # Анализ парковочных мест в соответствии с car_boxes, парковочными зонами и перспективой
         # POST запрос на drfbase для записи парковочных мест
 
-        print(data)
+        print('Результат action:', data)
 
     def destroy(self):
         pass

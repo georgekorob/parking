@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.urls import path, include
 
-from camsapp.views import IndexTemplateView, IndexDetailView, PictureUpdate
+from camsapp.views import IndexTemplateView, IndexDetailView, PictureUpdate, CameraModelDetailView
 
 app_name = 'camsapp'
 urlpatterns = [
     path('', IndexTemplateView.as_view(), name='index'),
     path('cams/<int:pk>/', IndexDetailView.as_view(), name='camera'),
     path('camspic/<int:pk>/', PictureUpdate.as_view(), name='picture'),
+    path('caminfo/<int:pk>/', CameraModelDetailView.as_view(), name='info'),
 ]

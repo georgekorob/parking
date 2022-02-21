@@ -8,15 +8,25 @@ from rest_framework.viewsets import ModelViewSet
 from camsapp.models import Camera
 from camsapp.serializers import CameraModelSerializer
 from camsapp.views import CameraModelAPIView
-from srvapp.models import AIServer, CAMServer
+from srvapp.models import AIServer, CAMServer, ANServer
 from srvapp.serializers import AIServerModelSerializer, CAMServerModelSerializer, AIServerForCameraModelSerializer, \
-    ANServerForCameraModelSerializer
+    ANServerForCameraModelSerializer, ANServerModelSerializer
 
 
 # Create your views here.
 class AIServerModelViewSet(ModelViewSet):
     queryset = AIServer.objects.all()
     serializer_class = AIServerModelSerializer
+
+
+class ANServerModelViewSet(ModelViewSet):
+    queryset = ANServer.objects.all()
+    serializer_class = ANServerModelSerializer
+
+
+class CAMServerModelViewSet(ModelViewSet):
+    queryset = CAMServer.objects.all()
+    serializer_class = CAMServerModelSerializer
 
 
 def post_request_to_cam(request, ip, port, command, data=None):

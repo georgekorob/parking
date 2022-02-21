@@ -11,7 +11,7 @@ class AINeuroControl(ControlClass):
         self.request_to_srv(self.anserver['ip'],
                             self.anserver['port'],
                             '/init/',
-                            camera)
+                            self.camera)
         print('Результат init:', self.camera)
 
     def action(self, data, raw_data, client_socket):
@@ -40,7 +40,8 @@ class AINeuroControl(ControlClass):
                                 '/action/',
                                 data)
             print('Результат action:', self.camera)
-        print('Error action! Id not equal!')
+        else:
+            print('Error action! Id not equal!')
 
     def destroy(self):
         pass

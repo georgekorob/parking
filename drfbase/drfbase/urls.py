@@ -16,15 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from camsapp.views import CameraModelAPIView
+from camsapp.views import CameraModelAPIView, CameraInfoModelAPIView
 from django.conf import settings
 from django.conf.urls.static import static
-from srvapp.views import AIServerModelViewSet
+from srvapp.views import AIServerModelViewSet, CAMServerModelViewSet, ANServerModelViewSet
 
 router = DefaultRouter()
 router.register('cameras', CameraModelAPIView)
+router.register('camerainfos', CameraInfoModelAPIView)
+router.register('camservers', CAMServerModelViewSet)
 router.register('aiservers', AIServerModelViewSet)
-# router.register('anservers', ANServerModelViewSet)
+router.register('anservers', ANServerModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
