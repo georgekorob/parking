@@ -15,8 +15,9 @@ class AnalizeControl(ControlClass):
 
     def action(self, data, raw_data, client_socket):
         self.data = json.loads(data)
-        if self.data['camera_id'] == self.camera['camera_id']:
-            camera_id, file_name, file_size, car_boxes = self.data.values()
+        camera_id = self.data['camera_id']
+        if camera_id == self.camera['camera_id']:
+            file_name, file_size, car_boxes = self.data['file_name'], self.data['file_size'], self.data['car_boxes']
             self.file = self.get_file_client_socket(raw_data, client_socket, file_name)
             frame = self.frame_from_buffer_file(self.file)
 

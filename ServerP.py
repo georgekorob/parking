@@ -2,7 +2,6 @@ import io
 import json
 import socket
 from abc import ABC, abstractmethod
-
 import cv2
 import numpy as np
 import requests
@@ -27,9 +26,15 @@ class ServerIPCam:
             print(command)
             try:
                 if method == b'SOCKET':
-                    raw_data = raw_data.split(b'<file>', 1)
-                    data = raw_data[0].decode('utf-8')
-                    raw_data = raw_data[1] if len(raw_data) > 1 else b''
+                    data = ''
+                    while raw_data:
+                        raw_data = raw_data.split(b'<file>', 1)
+                        data += raw_data[0].decode('utf-8')
+                        if len(raw_data) > 1:
+                            raw_data = raw_data[1]
+                            break
+                        else:
+                            raw_data = client_socket.recv(1024)
                 else:
                     data = raw_data.decode('utf-8').split('\r\n')[8]
                 if command == 'init':
@@ -110,8 +115,8 @@ class ControlClass(ABC):
             file.write(line)  # пишем байтовые строки в файл на сервере
             if not line:
                 break
-        file.seek(0)
         file.name = file_name
+        file.seek(0)
         return file
 
     @staticmethod
