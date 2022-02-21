@@ -1,3 +1,4 @@
+import io
 import json
 from ServerP import ControlClass
 
@@ -12,15 +13,25 @@ class AnalizeControl(ControlClass):
         self.camerainfo = json.loads(json.loads(response.content)['camerainfo'])
         print('Результат init:', self.camerainfo)
 
-    def action(self, data, *args):
-        data = json.loads(data)
-        camera_id, car_boxes, file_name, file_size = data.values()
+    def action(self, data, raw_data, client_socket):
+        self.data = json.loads(data)
+        if self.data['camera_id'] == self.camera['camera_id']:
+            camera_id, file_name, file_size, car_boxes = self.data.values()
+            self.file = self.get_file_client_socket(raw_data, client_socket, file_name)
+            frame = self.frame_from_buffer_file(self.file)
 
-        # TODO:
-        # Анализ парковочных мест в соответствии с car_boxes, парковочными зонами и перспективой
-        # POST запрос на drfbase для записи парковочных мест
+            # TODO:
+            # Анализ парковочных мест в соответствии с car_boxes, парковочными зонами и перспективой
+            # POST запрос на drfbase для записи парковочных мест
 
-        print('Результат action:', data)
+            self.file = self.buffer_file_from_frame(frame, file_name)
+            self.request_to_base(f'{self.camera["baseserverlink"]}api/cameras/{self.camera["camera_id"]}/',
+                                 {'file_name': file_name},
+                                 {'picture': self.file},
+                                 'Send to drfbase:')
+            print('Результат action:', self.data)
+        else:
+            print('Error action! Id not equal!')
 
     def destroy(self):
         pass

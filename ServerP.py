@@ -1,7 +1,10 @@
+import io
 import json
-import pickle
 import socket
 from abc import ABC, abstractmethod
+
+import cv2
+import numpy as np
 import requests
 
 
@@ -22,23 +25,26 @@ class ServerIPCam:
             method, command, raw_data = raw_data.split(b' ', 2)
             command = command.decode('utf-8').strip('/')
             print(command)
-            if method == b'SOCKET':
-                raw_data = raw_data.split(b'<file>', 1)
-                data = raw_data[0].decode('utf-8')
-                raw_data = raw_data[1] if len(raw_data) > 1 else b''
-            else:
-                data = raw_data.decode('utf-8').split('\r\n')[8]
-            if command == 'init':
-                self.control = Control(data)
-            elif command == 'action':
-                self.control.action(data, raw_data, client_socket)
-            if command in ['init', 'action', 'destroy']:
-                client_socket.send(self.set_headers())
-            if command == 'destroy':
-                self.control.destroy()
+            try:
+                if method == b'SOCKET':
+                    raw_data = raw_data.split(b'<file>', 1)
+                    data = raw_data[0].decode('utf-8')
+                    raw_data = raw_data[1] if len(raw_data) > 1 else b''
+                else:
+                    data = raw_data.decode('utf-8').split('\r\n')[8]
+                if command == 'init':
+                    self.control = Control(data)
+                elif command == 'action':
+                    self.control.action(data, raw_data, client_socket)
+                if command in ['init', 'action', 'destroy']:
+                    client_socket.send(self.set_headers())
+                if command == 'destroy':
+                    self.control.destroy()
+                    raise ConnectionError('Destroy!')
+            except Exception as e:
+                print(e)
+            finally:
                 client_socket.close()
-                break
-            client_socket.close()
         print('Shutdown!')
         server.close()
 
@@ -79,7 +85,7 @@ class ControlClass(ABC):
     def request_to_base(url, data, files=None, errfstr='', *args):
         try:
             response = requests.patch(url=url, files=files, data=data)
-            print(response.status_code, response.content)
+            # print(response.status_code, response.content)
         except Exception as e:
             print(errfstr.format(*args), end='')
             print(e)
@@ -88,8 +94,33 @@ class ControlClass(ABC):
     def request_get_from_base(url, errfstr='', *args):
         try:
             response = requests.get(url=url)
-            print(response.status_code, response.content)
+            # print(response.status_code, response.content)
             return response
         except Exception as e:
             print(errfstr.format(*args), end='')
             print(e)
+
+    @staticmethod
+    def get_file_client_socket(raw_data, client_socket, file_name):
+        file = io.BytesIO()
+        # file_for_save = open(f'{self.data["file_name"]}', 'wb')
+        file.write(raw_data)
+        while True:
+            line = client_socket.recv(1024)  # получаем байтовые строки
+            file.write(line)  # пишем байтовые строки в файл на сервере
+            if not line:
+                break
+        file.seek(0)
+        file.name = file_name
+        return file
+
+    @staticmethod
+    def buffer_file_from_frame(frame_to_buf, filename):
+        io_buf_bytes = io.BytesIO(cv2.imencode('.jpg', frame_to_buf)[1].tobytes())
+        io_buf_bytes.name = filename
+        return io.BufferedReader(io_buf_bytes)
+
+    @staticmethod
+    def frame_from_buffer_file(bytesio):
+        file_bytes = np.asarray(bytearray(bytesio.read()), dtype=np.uint8)
+        return cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)

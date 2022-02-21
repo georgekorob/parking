@@ -44,21 +44,15 @@ class IPCameraControl(ControlClass):
                             camera_json)
         print('Результат init:', camera_json)
 
-    @staticmethod
-    def buffer_file_from_frame(frame_to_buf, filename):
-        io_buf_bytes = io.BytesIO(cv2.imencode('.jpg', frame_to_buf)[1].tobytes())
-        io_buf_bytes.name = filename
-        return io.BufferedReader(io_buf_bytes)
-
     def action(self, id_cameras_json, *args):
         if self.camera.id == json.loads(id_cameras_json)[0]:
             _, frame = self.camera.cap.read()
-            namefile = f'{self.camera.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpeg'
+            namefile = f'{self.camera.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpg'
             io_buf_file = self.buffer_file_from_frame(frame, namefile)
-            self.request_to_base(f'{self.camera.baseserverlink}api/cameras/{self.camera.id}/',
-                                 {'file_name': namefile},
-                                 {'picture': io_buf_file},
-                                 'Send to drfbase:')
+            # self.request_to_base(f'{self.camera.baseserverlink}api/cameras/{self.camera.id}/',
+            #                      {'file_name': namefile},
+            #                      {'picture': io_buf_file},
+            #                      'Send to drfbase:')
             self.request_to_srv(self.camera.aiserver['ip'],
                                 self.camera.aiserver['port'],
                                 '/action/',
