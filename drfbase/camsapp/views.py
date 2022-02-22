@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from camsapp.models import Camera, CameraInfo
 from camsapp.serializers import CameraModelSerializer, CameraInfoModelSerializer, CameraInfoForAnModelSerializer
-from srvapp.views import action_cam_server
+# from srvapp.views import action_cam_server
 
 
 # Create your views here.
@@ -21,6 +21,7 @@ class CameraModelAPIView(mixins.RetrieveModelMixin,
     def partial_update(self, request, *args, **kwargs):
         # TODO:
         # 1. Если в запросе есть точки парковочных мест, то удалить текущие и создать новые
+        # park_free_f, park_free_c
         # 2. Подать запрос action_cam_server(request, pk)
         return super().partial_update(request, *args, **kwargs)
 
@@ -53,5 +54,5 @@ class CameraModelDetailView(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        camerainfo = CameraInfoForAnModelSerializer(self.object.info.get()).data
+        camerainfo = CameraInfoForAnModelSerializer(self.object.info).data
         return JsonResponse(camerainfo)

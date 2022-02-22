@@ -4,7 +4,7 @@ import sys
 import requests
 
 shotspath = Path(__file__).resolve().parent.parent / 'camerashots'
-namefile = shotspath / '001' / '00001.jpg'
+namefile = shotspath / '001' / 'frame.jpg'
 file = open(namefile, 'rb')
 
 ip = "127.0.0.1"

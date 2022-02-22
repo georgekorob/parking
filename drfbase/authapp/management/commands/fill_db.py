@@ -63,14 +63,23 @@ class Command(BaseCommand):
                                        camlink=os.getenv('CAM_URL'))
         camera.users.set(User.objects.all())
         camerainfo = {
-            'frame_points': [[346, 633], [1500, 404], [2405, 474], [1228, 1403]],
-            'coord_points': [[55.857961, 37.350879], [55.857386, 37.351734], [55.856881, 37.351394],
-                             [55.857532, 37.349996]],
-            'interceptor': [699, 417],
-            'parking_lines': [[[69, 182], [681, 12]], [[0, 296], [604, 111]], [[11, 362], [694, 136]],
-                              [[269, 389], [720, 212]]],
-        }
-        caminfo = CameraInfo.objects.create(camera=camera, camerainfo=json.dumps(camerainfo))
+            'frame_points': [[313, 405],
+                             [431, 97],
+                             [1401, 43],
+                             [1809, 395]],
+            'map_points': [[657, 515],
+                           [633, 713],
+                           [271, 473],
+                           [361, 261]],
+            'coord_points': [[59.984439, 30.379857],  # Угол дороги
+                             [59.984052, 30.379763],  # Левый угол дома
+                             [59.984527, 30.378334],  # Правый угол дома
+                             [59.984944, 30.378689]],  # Угол правого дома
+            'cam_height': 30,
+            'parking_lines': [[[914, 858], [1133, 853]], [[1195, 850], [1523, 807]], [[1523, 807], [1784, 727]],
+                              [[926, 1022], [1496, 961]]],
+        }  # , [[0,0],[0,0]]
+        CameraInfo.objects.create(camera=camera, camerainfo=json.dumps(camerainfo))
         print('DONE!!!')
 
 # User.objects.all().delete()

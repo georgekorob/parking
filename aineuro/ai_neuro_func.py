@@ -74,7 +74,10 @@ class AINeuroControl(ControlClass):
 
         # path = os.listdir('/detect')
         with open(name_file_result_txt, 'rb') as file:
-            labels = [[float(l) for l in lab.decode('utf-8').split(' ')[1:]] for lab in file.read().split(b'\r\n')]
+            labels = [[float(l) for l in lab.decode('utf-8').split(' ')[1:]] for lab in file.read().split(b'\r\n') if lab]
+        xl, yl = 1920, 1080
+        labels = [[(box[0]-box[2]/2)*xl, (box[1]-box[3]/2)*yl, (box[0]+box[2]/2)*xl, (box[1]+box[3]/2)*yl] for box in labels]
+        labels = [[int(b) for b in box] for box in labels]
         with open(name_file_result, 'rb') as f:
             file = io.BytesIO(f.read())
         file.seek(0)
@@ -84,4 +87,4 @@ class AINeuroControl(ControlClass):
 
 if __name__ == '__main__':
     control = AINeuroControl('{"camera_id": 1}')
-    control.get_file_from_ai('../camerashots/001/00001.jpg')
+    control.get_file_from_ai('../camerashots/001/frame.jpg')
