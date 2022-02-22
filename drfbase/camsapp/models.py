@@ -22,5 +22,14 @@ class Camera(models.Model):
 
 
 class CameraInfo(models.Model):
-    camera = models.ForeignKey(Camera, related_name='info', on_delete=models.CASCADE)
+    camera = models.OneToOneField(Camera, related_name='info', on_delete=models.CASCADE)
     camerainfo = models.TextField(default='')
+
+
+class CarPoint(models.Model):
+    camera = models.ForeignKey(Camera, related_name='points', on_delete=models.CASCADE)
+    xmap = models.IntegerField(default=0)
+    ymap = models.IntegerField(default=0)
+    xframe = models.IntegerField(default=0)
+    yframe = models.IntegerField(default=0)
+    is_busy = models.BooleanField(default=True)
