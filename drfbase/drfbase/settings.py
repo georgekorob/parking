@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django_filters',
     'authapp',
     'camsapp',
-    'srvapp'
+    'srvapp',
+    'fisheyeapp',
 ]
 
 MIDDLEWARE = [

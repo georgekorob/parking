@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from django.utils import lorem_ipsum
 from authapp.models import User
 from camsapp.models import Camera, CameraInfo
+from fisheyeapp.models import CameraFish
 from srvapp.models import CAMServer, AIServer, ANServer
 
 
@@ -80,6 +81,7 @@ class Command(BaseCommand):
                               [[926, 1022], [1496, 961]]],
         }  # , [[0,0],[0,0]]
         CameraInfo.objects.create(camera=camera, camerainfo=json.dumps(camerainfo))
+        CameraFish.objects.create(camera=camera, fisheye='')
         print('DONE!!!')
 
 # User.objects.all().delete()

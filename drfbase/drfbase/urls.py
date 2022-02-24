@@ -19,6 +19,7 @@ from rest_framework.routers import DefaultRouter
 from camsapp.views import CameraModelAPIView, CameraInfoModelAPIView
 from django.conf import settings
 from django.conf.urls.static import static
+from fisheyeapp.views import FishModelViewSet
 from srvapp.views import AIServerModelViewSet, CAMServerModelViewSet, ANServerModelViewSet
 
 router = DefaultRouter()
@@ -27,6 +28,7 @@ router.register('camerainfos', CameraInfoModelAPIView)
 router.register('camservers', CAMServerModelViewSet)
 router.register('aiservers', AIServerModelViewSet)
 router.register('anservers', ANServerModelViewSet)
+router.register('camfishes', FishModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +36,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', include('camsapp.urls', namespace='camsapp')),
     path('srvapp/', include('srvapp.urls', namespace='srvapp')),
+    path('fisheyeapp/', include('fisheyeapp.urls', namespace='fisheyeapp')),
 ]
 
 if settings.DEBUG:
