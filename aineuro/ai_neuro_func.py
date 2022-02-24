@@ -2,7 +2,7 @@ import io
 import json
 import os
 from ServerP import ControlClass
-from aineuro.yolo import detect
+from yolo import detect
 
 
 class AINeuroControl(ControlClass):
@@ -48,24 +48,24 @@ class AINeuroControl(ControlClass):
         if not file_orig:
             with open(file_name, 'rb') as f:
                 file_orig = io.BytesIO(f.read())
-        test_file_name = '../aineuro/images/temp.jpg'
+        test_file_name = 'images/temp.jpg'
         with open(test_file_name, 'wb') as f:
             f.write(file_orig.read())
-        name_file_result = '../aineuro/exp/temp.jpg'
+        name_file_result = 'exp/temp.jpg'
         if os.path.exists(name_file_result):
             os.remove(name_file_result)
-        name_file_result_txt = '../aineuro/exp/labels/temp.txt'
+        name_file_result_txt = 'exp/labels/temp.txt'
         if os.path.exists(name_file_result_txt):
             os.remove(name_file_result_txt)
 
         # detect.run
         detect.run(
-            weights='../aineuro/yolo/s-512.pt',
+            weights='yolo/s-512.pt',
             imgsz=(1920, 1080),
             conf_thres=0.25,
             source=test_file_name,
             classes=(0,),
-            project='../aineuro',
+            project='',
             exist_ok=True,
             line_thickness=1,
             hide_labels=True,

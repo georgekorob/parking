@@ -1,6 +1,6 @@
 import json
 from ServerP import ControlClass
-from analize.free_places import MappingPoints
+from free_places import MappingPoints
 
 
 class AnalizeControl(ControlClass):
