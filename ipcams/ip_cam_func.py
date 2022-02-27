@@ -38,10 +38,13 @@ class IPCameraControl(ControlClass):
     def __init__(self, cam_list_json):
         self.camera = Camera(json.loads(cam_list_json)[0])
         camera_json = self.camera.get_json()
-        self.request_to_srv(self.camera.aiserver['ip'],
-                            self.camera.aiserver['port'],
-                            '/init/',
-                            camera_json)
+        try:
+            self.request_to_srv(self.camera.aiserver['ip'],
+                                self.camera.aiserver['port'],
+                                '/init/',
+                                camera_json)
+        except Exception as e:
+            print('aiserver', e)
         print('Результат init:', camera_json)
 
     def action(self, id_cameras_json, *args):
@@ -49,15 +52,21 @@ class IPCameraControl(ControlClass):
             _, frame = self.camera.cap.read()
             namefile = f'{self.camera.id:05}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")}.jpg'
             io_buf_file = self.buffer_file_from_frame(frame, namefile)
-            # self.request_to_base(f'{self.camera.baseserverlink}api/cameras/{self.camera.id}/',
-            #                      {'file_name': namefile},
-            #                      {'picture': io_buf_file},
-            #                      'Send to drfbase:')
-            self.request_to_srv(self.camera.aiserver['ip'],
-                                self.camera.aiserver['port'],
-                                '/action/',
-                                {'file_name': namefile, 'camera_id': self.camera.id},
-                                io_buf_file)
+            try:
+                self.request_to_base(f'{self.camera.baseserverlink}api/cameras/{self.camera.id}/',
+                                     {'file_name': namefile},
+                                     {'picture': io_buf_file},
+                                     'Send to drfbase:')
+            except Exception as e:
+                print('drfbase', e)
+            try:
+                self.request_to_srv(self.camera.aiserver['ip'],
+                                    self.camera.aiserver['port'],
+                                    '/action/',
+                                    {'file_name': namefile, 'camera_id': self.camera.id},
+                                    io_buf_file)
+            except Exception as e:
+                print('aiserver', e)
             print('Результат action:', io_buf_file.__sizeof__())
         else:
             print('Error action! Id not equal!')
